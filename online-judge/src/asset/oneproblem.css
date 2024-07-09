@@ -1,0 +1,79 @@
+.solve {
+    display: flex;
+    flex-direction: row;
+    height: 91.2vh;
+    width: 100vw;
+    overflow: hidden;   
+}
+
+.solve .description {
+    display: flex;
+    position: sticky;
+    flex-direction: column; 
+    width: 40vw;
+    max-height: 100vh; 
+    overflow: auto;
+    background-color: bisque;
+}
+
+.solve .result .Display_output{
+    margin-top: 40px;
+    background-color: black;
+    width:90%;
+    min-height: 250px;
+    border:2px solid blueviolet;
+    border-radius: 40px;
+}
+.solve .result .Display_output .here{
+    color: white;
+    margin-top: 30px;
+}
+
+.solve .result {
+    display: flex;
+    position: sticky;
+    align-items: center;
+    flex-direction: column; 
+    width: 40vw;
+    min-height: 84vh; 
+    overflow: auto;
+    background-color: bisque;
+}
+.solve .description .title {
+    font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  padding-left: 31px;
+}
+
+.solve .description .desc {
+    font-size: 1.2rem;
+    padding-left: 30px;
+    text-align: left;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.solve .description .example .examples .input {
+    display: flex;
+    align-items: center;
+}
+
+.solve .description .example .examples .output {
+    display: flex;
+    align-items: center;
+}
+
+.solve .description .time .constraint {
+    display: flex;
+    align-items: center;
+}
+
+.solve .codeeditor {
+    width: 60vw;
+    height: 100vh;
+    overflow: hidden; 
+    background-color: rgb(42, 42, 42);
+}

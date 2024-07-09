@@ -1,0 +1,22 @@
+.dashboard-container {
+    margin-top: 20px;
+  }
+  
+  .activity-graph {
+    width: 100%;
+    height: 150px;
+    background-color: #444;
+    margin: 20px 0;
+  }
+  
+  .badges {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .badges img {
+    width: 50px;
+    height: 50px;
+  }
+  
