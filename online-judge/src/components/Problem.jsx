@@ -32,7 +32,7 @@ function Problem() {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const response = await fetch(`http://15.206.73.121:3001/user/getProblem`, {
+                const response = await fetch(`https://backend.codeingjudge.online/user/getProblem`, {
                     method: 'GET',
                     headers: {
                         'problem_id': `${id}`,
@@ -61,7 +61,7 @@ function Problem() {
     const handleRun = async () => {
         try {
             console.log(pro._id);
-            const response = await fetch(`http://15.206.73.121:3001/user/solve`, {
+            const response = await fetch(`https://backend.codeingjudge.online/user/solve`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ function Problem() {
     const handleSubmit = async () => {
         setShow('verdict');
         try {
-            const response = await fetch(`http://15.206.73.121:3001/user/verdict`, {
+            const response = await fetch(`https://backend.codeingjudge.online/user/verdict`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ function Problem() {
     
     const updateActivityCalendar = async () => {
         try {
-            const activityResponse = await fetch(`http://15.206.73.121:3001/update/updateActivity`, {
+            const activityResponse = await fetch(`https://backend.codeingjudge.online/update/updateActivity`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ function Problem() {
     
     const updateSolvedStatus = async () => {
         try {
-            const updateResponse = await fetch(`http://15.206.73.121:3001/update/updateSolved`, {
+            const updateResponse = await fetch(`https://backend.codeingjudge.online/update/updateSolved`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
