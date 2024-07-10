@@ -14,7 +14,7 @@ const signinput = z.object({
 
 const auth=express.Router();
 
-auth.use(cors());
+
 
 auth.post('/admin/signup',async (req,res)=>{
     let parsedInput =  signinput.safeParse(req.body);
