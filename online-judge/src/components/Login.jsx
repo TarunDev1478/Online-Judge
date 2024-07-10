@@ -42,7 +42,7 @@
               res.json().then(callback2);
             }
             try {
-              const response = await fetch(`http://15.206.73.121:3001/auth/admin/login`, {
+              const response = await fetch(`https://backend.codeingjudge.online/auth/admin/login`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -72,7 +72,7 @@
               res.json().then(callback2);
             }
             try {
-              const response = await fetch(`http://15.206.73.121:3001/auth/user/login`, {
+              const response = await fetch(`https://backend.codeingjudge.online/auth/user/login`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
