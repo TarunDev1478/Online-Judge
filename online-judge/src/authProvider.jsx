@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchData1 = async () => {
       try {
-        const response = await fetch('http://15.206.73.121:3001/auth/admin/me', {
+        const response = await fetch('https://backend.codeingjudge.online/auth/admin/me', {
           method: 'GET',
           headers: { 'Authorization': `${localStorage.getItem('token')}` }
         });
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     };
     const fetchData2 = async () => {
       try {
-        const response = await fetch('http://15.206.73.121:3001/auth/user/me', {
+        const response = await fetch('https://backend.codeingjudge.online/auth/user/me', {
           method: 'GET',
           headers: { 'Authorization': `${localStorage.getItem('token')}` }
         });
