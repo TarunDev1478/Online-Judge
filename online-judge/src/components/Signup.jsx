@@ -42,7 +42,7 @@ const handleMouseDownPassword = (event) => {
           res.json().then(callback2);
         }
         try {
-          const response = await fetch(`http://15.206.73.121:3001/auth/admin/signup`, {
+          const response = await fetch(`https://backend.codeingjudge.online/auth/admin/signup`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const handleMouseDownPassword = (event) => {
           res.json().then(callback2);
         }
         try {
-          const response = await fetch(`http://15.206.73.121:3001/auth/user/signup`, {
+          const response = await fetch(`https://backend.codeingjudge.online/auth/user/signup`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
