@@ -12,7 +12,12 @@ import uProfile from './routes/User/updateProfile.js';
 const app = express();
 const port = 3001;
 
-app.use(cors());
+app.use(
+    cors({
+        origin: 'https://backend.codeingjudge.online',
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use('/auth',auth);
 app.use('/admin',addProblem);
