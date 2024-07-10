@@ -370,7 +370,7 @@ function Dashboard() {
       const fetchData = async () => {
         try {
           setLoading(true);
-          const res = await fetch(`http://15.206.73.121:3001/profile/${username}`, {
+          const res = await fetch(`https://backend.codeingjudge.online/profile/${username}`, {
             method: "GET",
           });
           if (!res.ok) {
