@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 
 const solveProblem = express.Router();
 
-solveProblem.use(cors());
+
 
 var testcases=[];
 
