@@ -16,7 +16,7 @@ function ProblemList() {
     useEffect(() => {
         const fetchProblems = async () => {
             try {
-                const response = await fetch(`http://15.206.73.121:3001/user/problems`, {
+                const response = await fetch(`https://backend.codeingjudge.online/user/problems`, {
                     method: 'GET',
                     headers: { 'Authorization': `${localStorage.getItem('token')}` }
                 });
