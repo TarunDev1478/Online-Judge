@@ -7,7 +7,7 @@ import { authenticateUserJwt } from '../../../middleware/authentication.js';
 
 const OneProblem = express.Router();
 
-OneProblem.use(cors());
+
 
 OneProblem.get('/getProblem',authenticateUserJwt ,async (req, res) => {
     const id=req.headers.problem_id;
