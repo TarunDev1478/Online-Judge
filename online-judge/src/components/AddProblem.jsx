@@ -31,7 +31,7 @@ function AddProblem() {
 
     const handleAddProblem = async () => {
         try {
-            const response = await fetch(`http://15.206.73.121:3001/admin/addProblem`, {
+            const response = await fetch(`https://backend.codeingjudge.online/admin/addProblem`, {
                 method: "POST",
                 headers: {
                     'Authorization': `${localStorage.getItem('token')}`,
@@ -65,7 +65,7 @@ function AddProblem() {
     useEffect(() => {
         const fetchRes = async () => {
             try {
-                const res1 = await fetch(`http://15.206.73.121:3001/auth/admin/me`, {
+                const res1 = await fetch(`https://backend.codeingjudge.online/auth/admin/me`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `${localStorage.getItem('token')}`
