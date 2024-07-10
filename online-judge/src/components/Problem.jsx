@@ -42,8 +42,8 @@ function Problem() {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('Fetched problem data:', data);
-                setProblem(data[0]);
+                console.log('Fetched problem data:', data[0]);
+                setProblem(data);
             } catch (error) {
                 console.error('Error fetching problem:', error);
                 setError('Failed to fetch problem');
