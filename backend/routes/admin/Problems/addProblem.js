@@ -23,7 +23,6 @@ const problemInput = z.object({
 
 const addProblem = express.Router();
 
-addProblem.use(cors());
 
 addProblem.post('/addProblem', authenticateAdminJwt, async (req, res) => {
     const parsedInput = problemInput.safeParse(req.body);
