@@ -32,10 +32,9 @@ function Problem() {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const response = await fetch(`https://backend.codeingjudge.online/user/getProblem`, {
+                const response = await fetch(`https://backend.codeingjudge.online/user/getProblem?problem_id=${id}`, {
                     method: 'GET',
                     headers: {
-                        'problem_id': `${id}`,
                         'Authorization': `${localStorage.getItem('token')}`
                     }
                 });
