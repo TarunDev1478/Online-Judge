@@ -57,7 +57,7 @@ function Problem() {
         console.log(inputRef.current.value);
     }
 
-    const handleRun = async () => {
+     const handleRun = async () => {
         try {
             console.log(pro._id);
             const response = await fetch(`https://backend.codeingjudge.online/user/solve`, {
@@ -65,12 +65,12 @@ function Problem() {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `${localStorage.getItem('token')}`,
-                    'problem_id': pro._id
                 },
                 body: JSON.stringify({
                     language: 'cpp',
                     code: code,
-                    input: actualUserInput
+                    input: actualUserInput,
+                    problem_id:id,
                 })
             });
 
@@ -101,11 +101,11 @@ function Problem() {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `${localStorage.getItem('token')}`,
-                    'problem_id': pro._id
                 },
                 body: JSON.stringify({
                     language: 'cpp',
-                    code: code
+                    code: code,
+                    problem_id:id,
                 })
             });
             const data = await response.json();
