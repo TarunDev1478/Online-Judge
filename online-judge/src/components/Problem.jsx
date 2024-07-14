@@ -4,7 +4,7 @@ import '../asset/oneproblem.css';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import Editor from '@monaco-editor/react';
 import TextField from '@mui/material/TextField';
-import { Alert, Button } from '@mui/material';
+import { Alert, Button, Backdrop, CircularProgress } from '@mui/material';
 
 function Problem() {
     const { id } = useParams();
@@ -13,19 +13,18 @@ function Problem() {
     const [show, setShow] = useState("description");
     const [result, setResult] = useState(null);
     const [verdict, setVerdict] = useState([]);
-    const [comerror,setcomError]=useState(null);
+    const [comerror, setComError] = useState(null);
     const [code, setCode] = useState(
         `#include<bits/stdc++.h>\n\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}`
     );
     const [userInput, setUserInput] = useState('');
     const [actualUserInput, setActualUserInput] = useState('');
+    const [loading, setLoading] = useState(false); // Loader state
     const inputRef = useRef(null);
 
     const handleCode = (value) => {
-
         setCode(value);
     }
-
 
     const url = process.env.url;
 
@@ -42,7 +41,7 @@ function Problem() {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('Fetched problem data:', data[0]);
+                console.log('Fetched problem data:', data);
                 setProblem(data);
             } catch (error) {
                 console.error('Error fetching problem:', error);
@@ -57,7 +56,8 @@ function Problem() {
         console.log(inputRef.current.value);
     }
 
-     const handleRun = async () => {
+    const handleRun = async () => {
+        setLoading(true);
         try {
             console.log(pro._id);
             const response = await fetch(`https://backend.codeingjudge.online/user/solve`, {
@@ -70,7 +70,7 @@ function Problem() {
                     language: 'cpp',
                     code: code,
                     input: actualUserInput,
-                    problem_id:id,
+                    problem_id: id,
                 })
             });
 
@@ -90,10 +90,13 @@ function Problem() {
         } catch (error) {
             console.error('Error during code run:', error.message);
             setResult('An error occurred while running the code');
+        }finally {
+            setLoading(false); // Hide the loader
         }
     }
 
     const handleSubmit = async () => {
+        setLoading(true); // Show the loader
         setShow('verdict');
         try {
             const response = await fetch(`https://backend.codeingjudge.online/user/verdict`, {
@@ -105,32 +108,33 @@ function Problem() {
                 body: JSON.stringify({
                     language: 'cpp',
                     code: code,
-                    problem_id:id,
+                    problem_id: id,
                 })
             });
             const data = await response.json();
             console.log(data);
-            if(data.finaloutput.success==false){
-                setcomError(data.finaloutput.error);
+            if (data.finaloutput.success == false) {
+                setComError(data.finaloutput.error);
+            } else {
+                setVerdict(data.finaloutput.output);
+
+                const allPassed = data.finaloutput.output.every(result => result === true);
+
+                await updateActivityCalendar();
+
+                if (allPassed) {
+                    await updateSolvedStatus();
+                }
             }
-            else{
-            setVerdict(data.finaloutput.output);
-    
-            const allPassed = data.finaloutput.output.every(result => result === true);
-    
-            await updateActivityCalendar();
-    
-            if (allPassed) {
-                
-                await updateSolvedStatus();
-            }}
-    
+
         } catch (error) {
             console.error('Error during code submission:', error.message);
             setResult('An error occurred while submitting the code');
+        } finally {
+            setLoading(false); // Hide the loader
         }
     };
-    
+
     const updateActivityCalendar = async () => {
         try {
             const activityResponse = await fetch(`https://backend.codeingjudge.online/update/updateActivity`, {
@@ -140,17 +144,17 @@ function Problem() {
                     'Authorization': `${localStorage.getItem('token')}`,
                 }
             });
-    
+
             if (!activityResponse.ok) {
                 throw new Error('Failed to update activity');
             }
-    
+
             console.log('Activity updated in calendar');
         } catch (activityError) {
             console.error('Error updating activity:', activityError);
         }
     };
-    
+
     const updateSolvedStatus = async () => {
         try {
             const updateResponse = await fetch(`https://backend.codeingjudge.online/update/updateSolved`, {
@@ -161,14 +165,14 @@ function Problem() {
                 },
                 body: JSON.stringify({
                     problem_id: pro._id,
-                    level: pro.level  
+                    level: pro.level
                 })
             });
-    
+
             if (!updateResponse.ok) {
                 throw new Error('Failed to update solved status');
             }
-    
+
             console.log('Problem marked as solved and stats updated');
         } catch (updateError) {
             console.error('Error updating solved status:', updateError);
@@ -176,20 +180,20 @@ function Problem() {
     };
 
     const DescriptionComponent = ({ pro }) => (
-        <div 
-            style={{ 
+        <div
+            style={{
                 display: show === 'description' ? 'flex' : 'none',
                 flexDirection: 'column',
-                height: 'calc(100vh - 63px)', 
-                overflow: 'hidden' 
-            }} 
+                height: 'calc(100vh - 63px)',
+                overflow: 'hidden'
+            }}
             className="description"
         >
-            <div style={{ 
+            <div style={{
                 flex: '1',
-                overflowY: 'auto', 
+                overflowY: 'auto',
                 padding: '20px',
-                paddingBottom: '100px' 
+                paddingBottom: '100px'
             }}>
                 <div className='title'>{pro.problem_no}: {pro.title}</div>
                 <div className='desc' style={{ fontSize: '1.2rem', paddingLeft: '30px', textAlign: 'left', marginTop: '30px', marginBottom: '10px', lineHeight: '1.6', fontWeight: '600' }}>{pro.description}</div>
@@ -239,47 +243,44 @@ function Problem() {
     );
 
     const VerdictComponent = () => {
-        if(comerror==null){
-        return (
-        <div style={{ width: '40vw', minHeight: '100vh', display: show === 'verdict' ? 'flex' : 'none', backgroundColor: 'bisque' }} className="testcases">
-           
-            {Array.isArray(verdict) && verdict.map((result, index) => {
-                let color, text;
-                if (result === 'AC') {
-                    color = "Green";
-                    text = "Accepted";
-                } else if (result === 'TLE') {
-                    color = "orange";
-                    text = "Time Limit Exceeded";
-                } else if (result === 'CE') {
-                    color = "blue";
-                    text = "Compile Error";
-                } else {
-                    color = "red";
-                    text = "Wrong Answer";
-                }
-                return (
-                    
-                    <Button key={index} style={{ padding: "10px", margin: '10px', height: '30px', backgroundColor: color, color: "white" }}>
-                        {text}
-                    </Button>
-                );
-            })}
-            
-        </div>
-        )} else{
-            return(
-            <div style={{display:'flex',flexDirection:'column',alignItems:'center', width: '40vw', minHeight: '100vh', display: show === 'verdict' ? 'flex' : 'none', backgroundColor: 'bisque' }} className="testcases">
-                <h1 style={{color:'red'}}>COMPILE ERROR</h1>
-                <div style={{width:'70%',height:'400px',color:'red'}} className="error">
-                    <p> {comerror}</p>
+        if (comerror == null) {
+            return (
+                <div style={{ width: '40vw', minHeight: '100vh', display: show === 'verdict' ? 'flex' : 'none', backgroundColor: 'bisque' }} className="testcases">
+                    {Array.isArray(verdict) && verdict.map((result, index) => {
+                        let color, text;
+                        if (result === 'AC') {
+                            color = "Green";
+                            text = "Accepted";
+                        } else if (result === 'TLE') {
+                            color = "orange";
+                            text = "Time Limit Exceeded";
+                        } else if (result === 'CE') {
+                            color = "blue";
+                            text = "Compile Error";
+                        } else {
+                            color = "red";
+                            text = "Wrong Answer";
+                        }
+                        return (
+                            <Button key={index} style={{ padding: "10px", margin: '10px', height: '30px', backgroundColor: color, color: "white" }}>
+                                {text}
+                            </Button>
+                        );
+                    })}
                 </div>
-         </div>
-        )}
-        
+            )
+        } else {
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '40vw', minHeight: '100vh', display: show === 'verdict' ? 'flex' : 'none', backgroundColor: 'bisque' }} className="testcases">
+                    <h1 style={{ color: 'red' }}>COMPILE ERROR</h1>
+                    <div style={{ width: '70%', height: '400px', color: 'red' }} className="error">
+                        <p> {comerror}</p>
+                    </div>
+                </div>
+            )
+        }
     };
     
-
     const handleDes = () => {
         setShow('description');
     }
@@ -294,7 +295,11 @@ function Problem() {
     }
 
     if (!pro) {
-        return <div>Loading...</div>;
+        return <div>
+            <Backdrop open={true} style={{ zIndex: 1300, color: '#fff' }}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </div>;
     }
 
     return (
@@ -346,6 +351,9 @@ function Problem() {
                     }}
                 />
             </div>
+            <Backdrop open={loading} style={{ zIndex: 1300, color: '#fff' }}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
 }
