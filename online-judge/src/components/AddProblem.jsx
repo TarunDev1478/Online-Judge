@@ -2,6 +2,17 @@ import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import '../asset/addproblem.css';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { pink } from '@mui/material/colors';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useNavigate } from 'react-router-dom';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function AddProblem() {
     const [title, setTitle] = useState('');
@@ -14,8 +25,15 @@ function AddProblem() {
     const [timeConstraint, setTime] = useState('');
     const [creator, setCreator] = useState('');
     const [error, setError] = useState(null);
-  
+    const [success, setSuccess] = useState(null);
+    const [difficulty, setDifficulty] = useState('');
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+
     const url = process.env.url;
+
     const handleAddTest = () => {
         const obj1 = {
             input: input,
@@ -30,6 +48,7 @@ function AddProblem() {
     };
 
     const handleAddProblem = async () => {
+        setLoading(true); // Show the loader
         try {
             const response = await fetch(`https://backend.codeingjudge.online/admin/addProblem`, {
                 method: "POST",
@@ -38,14 +57,15 @@ function AddProblem() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    problem_no: 1,
                     title: title,
                     description: description,
                     creator: creator,
                     time_constraint: timeConstraint,
                     solved: false,
                     testCases: testCases,
-                    distestCases: displayTest
+                    level: difficulty,
+                    distestCases: displayTest,
+                    difficulty: difficulty
                 })
             });
 
@@ -54,11 +74,14 @@ function AddProblem() {
             if (!response.ok) {
                 throw new Error(data.error || 'Unknown error');
             }
-
-            console.log(data);
+            setSuccess('Problem added successfully!');
+            setError(null);
         } catch (error) {
-            console.error('Error occurred:', error);
             setError(error.message);
+            setSuccess(null);
+        } finally {
+            setLoading(false); // Hide the loader
+            setDialogOpen(true); // Show the dialog
         }
     };
 
@@ -72,14 +95,26 @@ function AddProblem() {
                     }
                 });
                 const data = await res1.json();
-                console.log(data);
                 setCreator(data.username);
             } catch (error) {
                 console.error({ "message": 'Failure' });
             }
         };
         fetchRes();
-    }, []); 
+    }, []);
+
+    const handleDifficultyChange = (level) => {
+        setDifficulty(level);
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+        if (success) {
+            navigate('/'); // Navigate to home page on success
+        } else {
+            window.location.reload(); // Reload the page on failure
+        }
+    };
 
     return (
         <div className='big'>
@@ -105,9 +140,52 @@ function AddProblem() {
                     <TextField onChange={(e) => setOutput(e.target.value)} sx={{ width: '300px', marginLeft: '20px' }} id="outlined-basic" label="Output" variant="outlined" />
                 </div>
                 <h2 style={{ textAlign: "left", paddingLeft: '50px' }}>Enter Time Constraint:</h2>
-                <TextField onChange={(e) => setTime(e.target.value)} style={{ width: '85%', marginLeft: '50px' }} fullWidth label="Time Constraint" id="fullWidth" />
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                <div className="row">
+                    <TextField onChange={(e) => setTime(e.target.value)} style={{ width: '42%', marginLeft: '-350px' }} fullWidth label="Time Constraint" id="fullWidth" />
+                    <div style={{ position: 'relative', top: '-90px', left: '400px' }} className="level">
+                        <FormControlLabel
+                            control={<Checkbox checked={difficulty === 'Hard'} onChange={() => handleDifficultyChange('Hard')} />}
+                            label="Hard"
+                            sx={{ color: pink[600], '&.Mui-checked': { color: pink[600] } }}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={difficulty === 'Medium'} onChange={() => handleDifficultyChange('Medium')} />}
+                            label="Medium"
+                            sx={{ color: 'yellow' }}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={difficulty === 'Easy'} onChange={() => handleDifficultyChange('Easy')} />}
+                            label="Easy"
+                            sx={{ color: 'green' }}
+                        />
+                    </div>
+                </div>
             </div>
+
+            <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {success ? "Success" : "Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {success || error}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="primary" autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
 }
