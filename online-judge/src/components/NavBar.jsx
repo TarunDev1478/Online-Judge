@@ -27,6 +27,7 @@ function NavBar() {
         logoutAdmin();
         logoutUser();
         localStorage.removeItem('token');
+        navigate('/');
       }
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -208,14 +209,14 @@ function NavBar() {
                         </Button>
                     </Box>
 
-                    <Box sx={{ flexGrow: 0 }}>
+                    <Box  sx={{ flexGrow: 0 ,display: isUserLogin || isAdminLogin ? 'flex' : 'none'}}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 ,display: isUserLogin || isAdminLogin ? 'flex' : 'none'}}>
                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
                         <Menu
-                            sx={{ mt: '45px' }}
+                            sx={{ mt: '45px',display: isUserLogin || isAdminLogin ? 'flex' : 'none' }}
                             id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
@@ -230,10 +231,10 @@ function NavBar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <MenuItem onClick={handleProfile}>
-                                <Typography textAlign="center">Profile</Typography>
+                            <MenuItem   sx={{display: isUserLogin  ? 'flex' : 'none'}} onClick={handleProfile}>
+                                <Typography  textAlign="center">Profile</Typography>
                             </MenuItem>
-                            <MenuItem onClick={handleLogout}>
+                            <MenuItem  onClick={handleLogout} sx={{display: isUserLogin || isAdminLogin ? 'flex' : 'none'}}>
                                 <Typography textAlign="center">Logout</Typography>
                             </MenuItem>
                         </Menu>
