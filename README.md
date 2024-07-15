@@ -21,6 +21,71 @@ Our Online Judge platform is an advanced and user-friendly system designed to fa
 3. **Submit Solutions**: Write and submit your solutions using the built-in code editor.
 4. **Track Progress**: Use the dashboard to track your progress and improve over time.
 
+## Getting Started
+
+Follow these steps to set up and run the backend locally.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/download/) (v14.x or later)
+- [MongoDB](https://www.mongodb.com/try/download/community) (v4.x or later)
+
+### Installation
+
+1. **Clone the repository**:
+    ```sh
+    git clone [https://github.com/TarunDev1478/Online-Judge]
+    cd Online-Judge
+    ```
+
+2. **Install dependencies**:
+    ```sh
+    npm install
+    ```
+
+3. **Set up environment variables**:
+    Create a `.env` file in the root directory and add the following variables:
+    ```env
+    PORT=5000
+    MONGO_URI=mongodb://localhost:27017/onlinejudge
+    JWT_SECRET=your_jwt_secret
+    ```
+
+### Running the Server
+
+1. **Start MongoDB**:
+    Make sure MongoDB is running. If you have MongoDB installed locally, you can start it with:
+    ```sh
+    mongod
+    ```
+
+2. **Run the server**:
+    ```sh
+    npm start
+    ```
+
+    The server should now be running on `http://localhost:5000`.
+
+### API Endpoints
+
+- **Auth Routes**:
+  - `POST /user/auth/signup`: Register a new user.
+  - `POST /user/auth/login`: Log in an existing user.
+  - `POST /admin/auth/signup`: Register a new admin.
+  - `POST /admin/auth/login`: Log in an existing admin.
+
+- **Problem Routes**:
+  - `POST /problems`: Create a new problem.
+  - `GET /problems`: Get all problems.
+  - `GET /user/problems/:id`: Get a specific problem by ID.
+  - `PUT /admin/problems/:id`: Update a problem by ID.
+
+### Testing
+
+To run tests, use the following command:
+```sh
+npm test
+
 ## Community and Support
 
 - **Discussion Forums**: Join the community to discuss problems, share solutions, and learn from others.
