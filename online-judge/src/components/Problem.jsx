@@ -118,7 +118,7 @@ function Problem() {
             } else {
                 setVerdict(data.finaloutput.output);
 
-                const allPassed = data.finaloutput.output.every(result => result === true);
+                const allPassed = data.finaloutput.output.every(result => result === 'AC');
 
                 await updateActivityCalendar();
 
